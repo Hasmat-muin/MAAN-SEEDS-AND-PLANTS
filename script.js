@@ -130,11 +130,11 @@ function renderDynamicCategoryTabs() {
     const swipeContainer = document.getElementById('swipeCategoryBar');
     if (!swipeContainer) return;
 
-    let html = `<a href="#" class="cat-icon-item active" onclick="switchCategory('All', this)"><i class="fas fa-layer-group"></i><span>সব দেখুন</span></a>`;
+    let html = `<a href="javascript:void(0)" class="cat-icon-item active" onclick="switchCategory('All', this)"><i class="fas fa-layer-group"></i><span>সব দেখুন</span></a>`;
 
     activeCategories.forEach(category => {
         const safeCat = category.replace(/'/g, "\\'");
-        html += `<a href="#" class="cat-icon-item" onclick="switchCategory('${safeCat}', this)"><i class="${getCategoryIcon(category)}"></i><span>${category}</span></a>`;
+        html += `<a href="javascript:void(0)" class="cat-icon-item" onclick="switchCategory('${safeCat}', this)"><i class="${getCategoryIcon(category)}"></i><span>${category}</span></a>`;
     });
     swipeContainer.innerHTML = html;
 }
@@ -155,6 +155,14 @@ async function fetchProducts() {
 
         renderDynamicCategoryTabs();
         renderCategoryWiseColumns(); 
+
+        // পেজ রিলোড দিলেও যেন সঠিক ক্যাটাগরিতে থাকে
+        const urlParams = new URLSearchParams(window.location.search);
+        const catFromUrl = urlParams.get('cat');
+        if(catFromUrl) {
+            setTimeout(() => switchCategory(catFromUrl, null, false), 100);
+        }
+
     } catch (err) { console.error(err); }
 }
 
@@ -210,23 +218,63 @@ function searchProducts(query) {
     });
 }
 
-function switchCategory(cat, element) {
+// 👇 নতুন আপডেট করা ক্যাটাগরি সুইচিং ও হিস্ট্রি ফাংশন
+function switchCategory(cat, element = null, saveHistory = true) {
+    if (!element) {
+        document.querySelectorAll('.cat-icon-item').forEach(el => {
+            let spanText = el.querySelector('span').innerText.trim().toLowerCase();
+            if (spanText === cat.toLowerCase() || (cat === 'All' && spanText === 'সব দেখুন')) {
+                element = el;
+            }
+        });
+    }
+
     document.querySelectorAll('.cat-icon-item').forEach(el => el.classList.remove('active'));
-    element.classList.add('active');
-    if (cat === 'All') { visibleCategoryCount = 7; renderCategoryWiseColumns(); return; }
-    visibleCategoryCount = activeCategories.length; renderCategoryWiseColumns();
+    if(element) element.classList.add('active');
+
+    // ব্রাউজার হিস্ট্রিতে ক্যাটাগরি সেভ করা
+    if (saveHistory) {
+        let urlParams = new URLSearchParams(window.location.search);
+        if (cat === 'All') {
+            urlParams.delete('cat');
+        } else {
+            urlParams.set('cat', cat);
+        }
+        let newUrl = window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : '');
+        window.history.pushState({ category: cat }, '', newUrl);
+    }
+
+    if (cat === 'All') { 
+        visibleCategoryCount = 7; 
+        renderCategoryWiseColumns(); 
+        return; 
+    }
+    
+    visibleCategoryCount = activeCategories.length; 
+    renderCategoryWiseColumns();
+    
     document.querySelectorAll('.category-section').forEach(sec => {
         sec.style.display = sec.dataset.catName === cat.toLowerCase() ? 'block' : 'none';
     });
 }
 
-function viewFullCategory(cat) { switchCategory(cat, document.querySelector('.cat-icon-item')); document.getElementById(`grid-${cat.replace(/[^a-zA-Z0-9]/g, '-')}`).classList.add('full-view'); }
+// 👇 মোবাইলের ফিজিক্যাল ব্যাক বাটন চাপলে আগের ক্যাটাগরি লোড করা
+window.addEventListener('popstate', function(event) {
+    if (event.state && event.state.category) {
+        switchCategory(event.state.category, null, false);
+    } else {
+        switchCategory('All', null, false);
+    }
+});
 
-/* 👇 নতুন যোগ করা ব্যাক ও নেক্সট পেজের ফাংশন */
-function goBackPage() {
-    window.history.back();
+function viewFullCategory(cat) { 
+    switchCategory(cat, null); 
+    setTimeout(() => {
+        let grid = document.getElementById(`grid-${cat.replace(/[^a-zA-Z0-9]/g, '-')}`);
+        if(grid) grid.classList.add('full-view');
+    }, 50);
 }
 
-function goForwardPage() {
-    window.history.forward();
-}
+/* ব্যাক ও নেক্সট পেজের ফাংশন */
+function goBackPage() { window.history.back(); }
+function goForwardPage() { window.history.forward(); }
