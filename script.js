@@ -99,7 +99,9 @@ function sendOrderToWhatsApp() {
     if (!name || !phone || !address) return alert("সম্পূর্ণ তথ্য দিন!");
 
     let subtotal = 0;
-    let message = `*📦 নতুন অর্ডার (Bustan Seeds & Plants)*\n👤 *নাম:* ${name}\n📞 *মোবাইল:* ${phone}\n🏠 *ঠিকানা:* ${address}\n🚚 *ডেলিভারি:* ${deliveryText}\n\n🛍️ *প্রোডাক্টসমূহ:*\n`;
+    
+    // 👇 এখানে MAAN Seeds & Plants নামটি বসানো হয়েছে
+    let message = `*📦 নতুন অর্ডার (MAAN Seeds & Plants)*\n👤 *নাম:* ${name}\n📞 *মোবাইল:* ${phone}\n🏠 *ঠিকানা:* ${address}\n🚚 *ডেলিভারি:* ${deliveryText}\n\n🛍️ *প্রোডাক্টসমূহ:*\n`;
     
     cart.forEach((item, index) => {
         message += `\n${index + 1}. *${item.name}*\n   - দাম: ৳${item.price}\n`;

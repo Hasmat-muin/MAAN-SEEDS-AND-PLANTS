@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bustan Seeds & Plants</title>
-    <link rel="icon" type="image/jpeg" href="logo.JPG">
+    <title>MAAN Seeds & Plants</title>
+    <link rel="icon" type="image/jpeg" href="logo.jpg">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -51,15 +51,14 @@
             </a>
 
             <div class="center-logo-box" onclick="window.location.reload();">
-                <img src="logo.JPG" class="header-main-logo" alt="Logo">
+                <img src="logo.jpg" class="header-main-logo" alt="Logo" onerror="this.src='logo.JPG'">
                 <div class="brand-text-block">
-                    <div class="center-brand-name">Bustan</div>
+                    <div class="center-brand-name">MAAN</div>
                     <div class="center-brand-sub">Seeds & Plants</div>
                 </div>
             </div>
 
             <div class="header-right-actions">
-                <!-- Cart Button -->
                 <button class="glow-cart-btn" onclick="toggleCart()" style="background:transparent; border:none; color:#fff; position:relative; cursor:pointer; font-size:20px;">
                     <i class="fas fa-shopping-cart"></i>
                     <span class="cart-glow-badge" id="cart-count" style="position:absolute; top:-6px; right:-8px; background:var(--accent); color:var(--primary-dark); font-size:10px; font-weight:800; padding:2px 5px; border-radius:50%;">0</span>
@@ -91,8 +90,8 @@
                 <span>Bismillah Gadget Zone BD</span>
             </a>
             <a href="#" class="shop-item active">
-                <img src="logo.JPG" alt="Bustan Seeds">
-                <span>Bustan Seeds & Plants</span>
+                <img src="logo.jpg" alt="MAAN Seeds" onerror="this.src='logo.JPG'">
+                <span>MAAN Seeds & Plants</span>
             </a>
         </div>
         <div class="shops-social">
@@ -101,15 +100,13 @@
         </div>
     </div>
 
-    <!-- Main Products Render Container -->
     <main id="products-container" style="padding-bottom: 80px;"></main>
 
-    <!-- 📱 BOTTOM CATEGORY NAVIGATION -->
     <div class="bottom-category-bar">
         <div class="icon-category-swipe-wrapper" id="swipeCategoryBar"></div>
     </div>
 
-    <!-- 🛒 Cart Sidebar (Fixed) -->
+    <!-- 🛒 Cart Sidebar -->
     <div id="cart-sidebar">
         <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #eee; padding-bottom:10px;">
             <h3 style="color:var(--primary-dark); margin:0;">Your Cart</h3>
@@ -134,7 +131,7 @@
             <textarea id="customer-address" placeholder="ঠিকানা" rows="2" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ccc; border-radius:6px; box-sizing:border-box;"></textarea>
             <select id="delivery-charge-select" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ccc; border-radius:6px; box-sizing:border-box;">
                 <option value="80">ঢাকার ভেতরে (৳৮০)</option>
-                <option value="150">ঢাকার বাইরে (৳১৫০)</option>
+                <option value="150">ঢাকার বাইরে (৳১৫0)</option>
             </select>
             <button onclick="sendOrderToWhatsApp()" style="background:#25d366; color:white; width:100%; padding:12px; border-radius:6px; font-weight:bold; border:none; cursor:pointer;">Confirm on WhatsApp</button>
         </div>

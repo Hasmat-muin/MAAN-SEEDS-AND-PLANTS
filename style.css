@@ -66,12 +66,12 @@ body {
 .header-action-btn i { font-size: 20px; }
 .header-action-btn span { font-size: 10px; font-weight: 600; color: var(--accent-light); }
 
-/* ✨ UPDATED: Logo and Name Side-by-Side */
+/* ✨ Logo and Name Side-by-Side */
 .center-logo-box { 
     display: flex; 
-    flex-direction: row; /* লোগো এবং নাম পাশাপাশি রাখার জন্য */
+    flex-direction: row; 
     align-items: center; 
-    gap: 8px; /* লোগো এবং নামের মাঝখানে ফাঁকা জায়গা */
+    gap: 8px; 
     cursor: pointer; 
     text-decoration: none; 
 }
@@ -79,7 +79,7 @@ body {
 .brand-text-block { 
     display: flex; 
     flex-direction: column; 
-    align-items: flex-start; /* নামগুলো বাম দিকে সমান রাখার জন্য */
+    align-items: flex-start; 
 }
 .center-brand-name { color: var(--accent); font-size: 16px; font-weight: 800; margin-top: 0; line-height: 1.1; }
 .center-brand-sub { color: #e9edc9; font-size: 10px; font-weight: 600; }
@@ -143,9 +143,6 @@ body {
 .price-box { display: flex; align-items: baseline; gap: 4px; }
 .price { font-size: 15px; color: #059669; font-weight: 800; }
 .old-price { font-size: 10px; color: #94a3b8; text-decoration: line-through; }
-.badge-stock { font-size: 8px; font-weight: 700; padding: 2px 4px; border-radius: 4px; margin-left: auto; }
-.in-stock { background: #e6f4ea; color: #137333; }
-.out-stock { background: #fce8e6; color: #c5221f; }
 
 .products-grid.full-view { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; scroll-snap-type: none; }
 .products-grid.full-view .product-card { flex: unset; max-width: none; }
