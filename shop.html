@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bustan Seeds & Plants</title>
+    <link rel="icon" type="image/jpeg" href="logo.JPG">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Cart Sidebar Slide Fix */
+        #cart-sidebar {
+            position: fixed;
+            top: 0;
+            right: -360px;
+            width: 320px;
+            height: 100%;
+            background: #fff;
+            z-index: 3000;
+            transition: 0.3s ease;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: -5px 0 20px rgba(0,0,0,0.2);
+            box-sizing: border-box;
+        }
+        #cart-sidebar.open {
+            right: 0 !important;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 🔝 TOP INFO BAR -->
+    <div class="top-info-bar">
+        <div class="top-social-links">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+        </div>
+        <a href="tel:+8801922790663" class="top-phone-link">
+            <i class="fas fa-phone-alt"></i> 01922-790663
+        </a>
+    </div>
+
+    <!-- 👑 MAIN APP HEADER -->
+    <header class="premium-header">
+        <div class="header-top-row">
+            <a href="reels.html" class="header-action-btn">
+                <i class="fas fa-play-circle" style="color: #ff4e50;"></i>
+                <span>Reel</span>
+            </a>
+
+            <div class="center-logo-box" onclick="window.location.reload();">
+                <img src="logo.JPG" class="header-main-logo" alt="Logo">
+                <div class="brand-text-block">
+                    <div class="center-brand-name">Bustan</div>
+                    <div class="center-brand-sub">Seeds & Plants</div>
+                </div>
+            </div>
+
+            <div class="header-right-actions">
+                <!-- Cart Button -->
+                <button class="glow-cart-btn" onclick="toggleCart()" style="background:transparent; border:none; color:#fff; position:relative; cursor:pointer; font-size:20px;">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-glow-badge" id="cart-count" style="position:absolute; top:-6px; right:-8px; background:var(--accent); color:var(--primary-dark); font-size:10px; font-weight:800; padding:2px 5px; border-radius:50%;">0</span>
+                </button>
+                <button class="header-action-btn" onclick="toggleShopsSidebar()">
+                    <i class="fas fa-bars"></i>
+                    <span>Menu</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="header-search-box-full">
+            <div class="mobile-search-inner">
+                <input type="text" id="main-search" placeholder="Search seeds, plants..." oninput="searchProducts(this.value)">
+                <div class="search-icon-badge"><i class="fas fa-search"></i></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 🏬 OUR SHOPS SIDEBAR -->
+    <div class="shops-sidebar" id="shops-sidebar">
+        <div class="shops-header">
+            <h3>আমাদের দোকান সমূহ</h3>
+            <button onclick="toggleShopsSidebar()">×</button>
+        </div>
+        <div class="shop-list">
+            <a href="https://bismillah-gadget-zone-bd.pages.dev/" class="shop-item">
+                <img src="https://bismillah-gadget-zone-bd.pages.dev/logo.JPG" alt="Gadget Zone" onerror="this.src='logo.JPG'">
+                <span>Bismillah Gadget Zone BD</span>
+            </a>
+            <a href="#" class="shop-item active">
+                <img src="logo.JPG" alt="Bustan Seeds">
+                <span>Bustan Seeds & Plants</span>
+            </a>
+        </div>
+        <div class="shops-social">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="tel:+8801922790663"><i class="fas fa-phone-alt"></i></a>
+        </div>
+    </div>
+
+    <!-- Main Products Render Container -->
+    <main id="products-container" style="padding-bottom: 80px;"></main>
+
+    <!-- 📱 BOTTOM CATEGORY NAVIGATION -->
+    <div class="bottom-category-bar">
+        <div class="icon-category-swipe-wrapper" id="swipeCategoryBar"></div>
+    </div>
+
+    <!-- 🛒 Cart Sidebar (Fixed) -->
+    <div id="cart-sidebar">
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #eee; padding-bottom:10px;">
+            <h3 style="color:var(--primary-dark); margin:0;">Your Cart</h3>
+            <button style="font-size:24px; border:none; background:none; cursor:pointer;" onclick="toggleCart()">×</button>
+        </div>
+        <div id="cart-items-container" style="flex-grow:1; overflow-y:auto; margin-top:10px;"></div>
+        <div style="font-size:18px; font-weight:bold; border-top:2px solid #eee; padding-top:15px; margin-bottom:15px; display:flex; justify-content:space-between; color:var(--primary);">
+            <span>Total:</span><span>৳ <span id="cart-total-price">0</span></span>
+        </div>
+        <button onclick="openOrderModal()" style="background:var(--primary); color:#fff; width:100%; padding:12px; border-radius:8px; font-weight:bold; border:none; cursor:pointer;">Proceed Checkout</button>
+    </div>
+
+    <!-- 📦 Checkout Modal -->
+    <div class="order-modal-overlay" id="order-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:3500; justify-content:center; align-items:center; padding:10px;">
+        <div style="background:#fff; width:100%; max-width:400px; border-radius:12px; padding:20px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #eee; padding-bottom:10px; margin-bottom:10px;">
+                <h3 style="margin:0; font-size:16px;">Confirm Order</h3>
+                <span style="font-size:24px; cursor:pointer;" onclick="closeOrderModal()">&times;</span>
+            </div>
+            <input type="text" id="customer-name" placeholder="আপনার নাম" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ccc; border-radius:6px; box-sizing:border-box;">
+            <input type="tel" id="customer-phone" placeholder="মোবাইল নম্বর" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ccc; border-radius:6px; box-sizing:border-box;">
+            <textarea id="customer-address" placeholder="ঠিকানা" rows="2" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ccc; border-radius:6px; box-sizing:border-box;"></textarea>
+            <select id="delivery-charge-select" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ccc; border-radius:6px; box-sizing:border-box;">
+                <option value="80">ঢাকার ভেতরে (৳৮০)</option>
+                <option value="150">ঢাকার বাইরে (৳১৫০)</option>
+            </select>
+            <button onclick="sendOrderToWhatsApp()" style="background:#25d366; color:white; width:100%; padding:12px; border-radius:6px; font-weight:bold; border:none; cursor:pointer;">Confirm on WhatsApp</button>
+        </div>
+    </div>
+
+    <a href="https://wa.me/8801922790663" target="_blank" class="floating-whatsapp" title="WhatsApp" style="bottom: 90px;"><i class="fab fa-whatsapp"></i></a>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Watch & Buy - Bustan Seeds</title>
+    <style>
+        body { margin: 0; background: #000; color: #fff; font-family: sans-serif; }
+        .header { position: fixed; top: 0; width: 100%; padding: 15px; background: linear-gradient(rgba(0,0,0,0.8), transparent); z-index: 10; display:flex; justify-content:space-between; align-items:center; }
+        .back { color: #d4a373; text-decoration: none; font-size: 24px; font-weight: bold; }
+        .feed { width: 100vw; height: 100vh; overflow-y: scroll; scroll-snap-type: y mandatory; }
+        .reel { width: 100vw; height: 100vh; scroll-snap-align: start; position: relative; display: flex; justify-content: center; align-items: center; }
+        iframe { width: 100%; height: 100%; max-width: 500px; border: none; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="shop.html" class="back">← Back</a>
+        <h3 style="color:#d4a373; margin:0;">Shorts Showcase</h3>
+        <div style="width:24px;"></div>
+    </div>
+    <div class="feed" id="feed">Loading Videos...</div>
+
+    <script>
+        fetch("https://bustan-seeds-and-plants-default-rtdb.firebaseio.com/products.json")
+        .then(r => r.json()).then(data => {
+            let html = "";
+            Object.keys(data).forEach(k => {
+                let url = data[k].youtubeVideo || data[k].video;
+                if(url) {
+                    let match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|shorts\/|video\/))([\w-]{11})/);
+                    if(match) html += `<div class="reel"><iframe src="https://www.youtube.com/embed/${match[1]}?autoplay=0&loop=1&playlist=${match[1]}" allowfullscreen></iframe></div>`;
+                }
+            });
+            document.getElementById('feed').innerHTML = html || "<h3 style='text-align:center;margin-top:50vh;'>No videos found</h3>";
+        });
+    </script>
+</body>
+</html>
