@@ -10,46 +10,37 @@
     <style>
         /* Cart Sidebar Slide Fix */
         #cart-sidebar {
-            position: fixed;
-            top: 0;
-            right: -360px;
-            width: 320px;
-            height: 100%;
-            background: #fff;
-            z-index: 3000;
-            transition: 0.3s ease;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            box-shadow: -5px 0 20px rgba(0,0,0,0.2);
-            box-sizing: border-box;
+            position: fixed; top: 0; right: -360px; width: 320px; height: 100%;
+            background: #fff; z-index: 3000; transition: 0.3s ease; padding: 20px;
+            display: flex; flex-direction: column; box-shadow: -5px 0 20px rgba(0,0,0,0.2); box-sizing: border-box;
         }
-        #cart-sidebar.open {
-            right: 0 !important;
-        }
+        #cart-sidebar.open { right: 0 !important; }
     </style>
 </head>
 <body>
 
     <!-- 🔝 TOP INFO BAR -->
     <div class="top-info-bar">
-        <div class="top-social-links">
-            <a href="#"><i class="fab fa-facebook-f"></i></a>
-            <a href="#"><i class="fab fa-youtube"></i></a>
+        <div class="top-left-info">
+            <i class="fas fa-leaf" style="color: #4ade80;"></i> Grow Green, Live Clean
         </div>
         <a href="tel:+8801922790663" class="top-phone-link">
             <i class="fas fa-phone-alt"></i> 01922-790663
         </a>
     </div>
 
-    <!-- 👑 MAIN APP HEADER -->
+    <!-- 👑 MAIN APP HEADER (PREMIUM WHITE DESIGN) -->
     <header class="premium-header">
         <div class="header-top-row">
-            <a href="reels.html" class="header-action-btn">
-                <i class="fas fa-play-circle" style="color: #ff4e50;"></i>
+            <!-- Reel Button -->
+            <a href="reels.html" class="header-action-col">
+                <div class="reel-icon-circle">
+                    <i class="fas fa-play"></i>
+                </div>
                 <span>Reel</span>
             </a>
 
+            <!-- Center Logo & Name -->
             <div class="center-logo-box" onclick="window.location.reload();">
                 <img src="logo.jpg" class="header-main-logo" alt="Logo" onerror="this.src='logo.JPG'">
                 <div class="brand-text-block">
@@ -58,23 +49,40 @@
                 </div>
             </div>
 
+            <!-- Cart & Menu -->
             <div class="header-right-actions">
-                <button class="glow-cart-btn" onclick="toggleCart()" style="background:transparent; border:none; color:#fff; position:relative; cursor:pointer; font-size:20px;">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span class="cart-glow-badge" id="cart-count" style="position:absolute; top:-6px; right:-8px; background:var(--accent); color:var(--primary-dark); font-size:10px; font-weight:800; padding:2px 5px; border-radius:50%;">0</span>
+                <button class="header-action-col" onclick="toggleCart()">
+                    <div class="cart-icon-wrapper">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-glow-badge" id="cart-count">0</span>
+                    </div>
+                    <span>Cart</span>
                 </button>
-                <button class="header-action-btn" onclick="toggleShopsSidebar()">
-                    <i class="fas fa-bars"></i>
+                <button class="header-action-col" onclick="toggleShopsSidebar()">
+                    <div class="cart-icon-wrapper">
+                        <i class="fas fa-bars"></i>
+                    </div>
                     <span>Menu</span>
                 </button>
             </div>
         </div>
 
+        <!-- 🔍 SEARCH BAR & ARROWS -->
         <div class="header-search-box-full">
-            <div class="mobile-search-inner">
-                <input type="text" id="main-search" placeholder="Search seeds, plants..." oninput="searchProducts(this.value)">
-                <div class="search-icon-badge"><i class="fas fa-search"></i></div>
+            <div style="display: flex; gap: 5px;">
+                <button class="nav-arrow-btn" onclick="goBackPage()" title="আগের পেজে যান">←</button>
+                <button class="nav-arrow-btn" onclick="goForwardPage()" title="পরের পেজে যান">→</button>
             </div>
+            <div class="mobile-search-inner">
+                <i class="fas fa-search search-icon-left"></i>
+                <input type="text" id="main-search" placeholder="Search seeds, plants, pots, fertilizers..." oninput="searchProducts(this.value)">
+                <i class="fas fa-camera camera-icon-right"></i>
+            </div>
+        </div>
+
+        <!-- 📱 CATEGORY BAR (MOVED TO HEADER) -->
+        <div class="header-category-bar">
+            <div class="icon-category-swipe-wrapper" id="swipeCategoryBar"></div>
         </div>
     </header>
 
@@ -100,16 +108,13 @@
         </div>
     </div>
 
-    <main id="products-container" style="padding-bottom: 80px;"></main>
-
-    <div class="bottom-category-bar">
-        <div class="icon-category-swipe-wrapper" id="swipeCategoryBar"></div>
-    </div>
+    <!-- MAIN PRODUCTS -->
+    <main id="products-container" style="padding-bottom: 20px;"></main>
 
     <!-- 🛒 Cart Sidebar -->
     <div id="cart-sidebar">
         <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #eee; padding-bottom:10px;">
-            <h3 style="color:var(--primary-dark); margin:0;">Your Cart</h3>
+            <h3 style="color:var(--primary); margin:0;">Your Cart</h3>
             <button style="font-size:24px; border:none; background:none; cursor:pointer;" onclick="toggleCart()">×</button>
         </div>
         <div id="cart-items-container" style="flex-grow:1; overflow-y:auto; margin-top:10px;"></div>
@@ -137,7 +142,7 @@
         </div>
     </div>
 
-    <a href="https://wa.me/8801922790663" target="_blank" class="floating-whatsapp" title="WhatsApp" style="bottom: 90px;"><i class="fab fa-whatsapp"></i></a>
+    <a href="https://wa.me/8801922790663" target="_blank" class="floating-whatsapp" title="WhatsApp" style="bottom: 30px;"><i class="fab fa-whatsapp"></i></a>
 
     <script src="script.js"></script>
 </body>

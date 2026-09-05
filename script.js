@@ -100,7 +100,6 @@ function sendOrderToWhatsApp() {
 
     let subtotal = 0;
     
-    // 👇 এখানে MAAN Seeds & Plants নামটি বসানো হয়েছে
     let message = `*📦 নতুন অর্ডার (MAAN Seeds & Plants)*\n👤 *নাম:* ${name}\n📞 *মোবাইল:* ${phone}\n🏠 *ঠিকানা:* ${address}\n🚚 *ডেলিভারি:* ${deliveryText}\n\n🛍️ *প্রোডাক্টসমূহ:*\n`;
     
     cart.forEach((item, index) => {
@@ -222,3 +221,12 @@ function switchCategory(cat, element) {
 }
 
 function viewFullCategory(cat) { switchCategory(cat, document.querySelector('.cat-icon-item')); document.getElementById(`grid-${cat.replace(/[^a-zA-Z0-9]/g, '-')}`).classList.add('full-view'); }
+
+/* 👇 নতুন যোগ করা ব্যাক ও নেক্সট পেজের ফাংশন */
+function goBackPage() {
+    window.history.back();
+}
+
+function goForwardPage() {
+    window.history.forward();
+}
