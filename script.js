@@ -17,10 +17,12 @@ let selectedSizesGlobal = {};
 let activeCategories = []; 
 let visibleCategoryCount = 7;
 
-/* --- 🖼️ BILLBOARD SLIDER FUNCTION --- */
+/* --- 🖼️ BILLBOARD SLIDER FUNCTION (WITH SWIPE SUPPORT) --- */
 let currentSlide = 0;
 let slideInterval;
 let totalSlides = 0;
+let startX = 0;
+let endX = 0;
 
 async function fetchBillboards() {
     try {
@@ -59,6 +61,7 @@ async function fetchBillboards() {
 
         if (totalSlides > 1) {
             startSlider();
+            addSwipeListeners(container); // সোয়াইপ ফাংশন চালু করা হলো
         }
     } catch (e) { console.error("Slider Load Error:", e); }
 }
@@ -66,8 +69,7 @@ async function fetchBillboards() {
 function startSlider() {
     clearInterval(slideInterval);
     slideInterval = setInterval(() => {
-        currentSlide = (currentSlide + 1) % totalSlides;
-        updateSliderPosition();
+        nextSlide();
     }, 4000);
 }
 
@@ -77,6 +79,18 @@ function goToSlide(index) {
     startSlider(); 
 }
 
+function prevSlide() {
+    currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+    updateSliderPosition();
+    startSlider();
+}
+
+function nextSlide() {
+    currentSlide = (currentSlide + 1) % totalSlides;
+    updateSliderPosition();
+    startSlider();
+}
+
 function updateSliderPosition() {
     const wrapper = document.getElementById('slider-wrapper');
     const dots = document.querySelectorAll('.dot');
@@ -84,6 +98,67 @@ function updateSliderPosition() {
     dots.forEach((dot, index) => {
         dot.classList.toggle('active', index === currentSlide);
     });
+}
+
+// ম্যানুয়াল সোয়াইপ (মোবাইল এবং ডেস্কটপ)
+function addSwipeListeners(container) {
+    // মোবাইল টাচ ইভেন্ট
+    container.addEventListener('touchstart', e => {
+        startX = e.changedTouches[0].screenX;
+        clearInterval(slideInterval);
+    }, { passive: true });
+
+    container.addEventListener('touchmove', e => {
+        endX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    container.addEventListener('touchend', e => {
+        handleSwipe();
+    });
+
+    // ডেস্কটপ মাউস ড্র্যাগ ইভেন্ট
+    let isMouseDown = false;
+    container.addEventListener('mousedown', e => {
+        isMouseDown = true;
+        startX = e.clientX;
+        clearInterval(slideInterval);
+    });
+
+    container.addEventListener('mousemove', e => {
+        if (!isMouseDown) return;
+        endX = e.clientX;
+    });
+
+    container.addEventListener('mouseup', e => {
+        if (!isMouseDown) return;
+        isMouseDown = false;
+        handleSwipe();
+    });
+
+    container.addEventListener('mouseleave', e => {
+        if (isMouseDown) {
+            isMouseDown = false;
+            handleSwipe();
+        }
+    });
+}
+
+function handleSwipe() {
+    const threshold = 40; // সোয়াইপ করার নূন্যতম দূরত্ব
+    const diff = startX - endX;
+
+    if (Math.abs(diff) > threshold && endX !== 0) {
+        if (diff > 0) {
+            nextSlide(); // বামে সোয়াইপ
+        } else {
+            prevSlide(); // ডানে সোয়াইপ
+        }
+    } else {
+        startSlider();
+    }
+    
+    startX = 0;
+    endX = 0;
 }
 /* ------------------------------------- */
 
