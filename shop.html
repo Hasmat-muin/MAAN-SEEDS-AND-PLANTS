@@ -18,7 +18,7 @@
 </head>
 <body>
 
-    <!-- 🔝 TOP INFO BAR (DARK) -->
+    <!-- 🔝 TOP INFO BAR -->
     <div class="top-info-bar">
         <div class="top-social-links">
             <a href="#"><i class="fab fa-facebook-f"></i></a>
@@ -30,10 +30,9 @@
         </a>
     </div>
 
-    <!-- 👑 MAIN APP HEADER (PREMIUM DARK DESIGN) -->
+    <!-- 👑 MAIN APP HEADER (Category Bar Inside) -->
     <header class="premium-header">
         <div class="header-top-row">
-            <!-- Reel Button -->
             <a href="reels.html" class="header-action-col">
                 <div class="reel-icon-circle-dark">
                     <i class="fas fa-play"></i>
@@ -41,7 +40,6 @@
                 <span>Reel</span>
             </a>
 
-            <!-- Center Logo & Name -->
             <div class="center-logo-box" onclick="window.location.reload();">
                 <img src="logo.jpg" class="header-main-logo" alt="Logo" onerror="this.src='logo.JPG'">
                 <div class="brand-text-block">
@@ -50,7 +48,6 @@
                 </div>
             </div>
 
-            <!-- Cart & Menu -->
             <div class="header-right-actions">
                 <button class="header-action-col" onclick="toggleCart()">
                     <div class="cart-icon-wrapper">
@@ -77,15 +74,20 @@
             <div class="mobile-search-inner">
                 <i class="fas fa-search search-icon-left"></i>
                 <input type="text" id="main-search" placeholder="Search seeds, plants, pots, fertilizers..." oninput="searchProducts(this.value)">
-                <!-- 🎤 Mic Icon replaced the camera icon -->
                 <i class="fas fa-microphone camera-icon-right"></i>
             </div>
         </div>
+
+        <!-- 📱 CATEGORY BAR (Moved Inside Header Box) -->
+        <div class="header-category-bar">
+            <div class="icon-category-swipe-wrapper" id="swipeCategoryBar"></div>
+        </div>
     </header>
 
-    <!-- 📱 CATEGORY BAR (Placed just below header) -->
-    <div class="header-category-bar">
-        <div class="icon-category-swipe-wrapper" id="swipeCategoryBar"></div>
+    <!-- 🖼️ BILLBOARD SLIDER -->
+    <div class="billboard-container" id="billboard-container" style="display:none;">
+        <div class="slider-wrapper" id="slider-wrapper"></div>
+        <div class="slider-dots" id="slider-dots"></div>
     </div>
 
     <!-- 🏬 OUR SHOPS SIDEBAR -->

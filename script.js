@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     updateCartUI();
+    fetchBillboards(); // 🖼️ বিলবোর্ড কল করার ফাংশন
     if (document.getElementById('products-container')) { fetchProducts(); }
 });
 
@@ -7,6 +8,7 @@ const dbURL = "https://bustan-seeds-and-plants-default-rtdb.firebaseio.com/produ
 const authURL = "https://bustan-seeds-and-plants-default-rtdb.firebaseio.com/adminSettings.json";
 const catURL = "https://bustan-seeds-and-plants-default-rtdb.firebaseio.com/categories.json"; 
 const orderURL = "https://bustan-seeds-and-plants-default-rtdb.firebaseio.com/categoryOrder.json";
+const billboardAPI = "https://bustan-seeds-and-plants-default-rtdb.firebaseio.com/billboards.json";
 
 let cart = JSON.parse(localStorage.getItem('bustan_cart')) || [];
 let allProductsData = {}; 
@@ -14,6 +16,76 @@ let selectedVariantsGlobal = {};
 let selectedSizesGlobal = {};
 let activeCategories = []; 
 let visibleCategoryCount = 7;
+
+/* --- 🖼️ BILLBOARD SLIDER FUNCTION --- */
+let currentSlide = 0;
+let slideInterval;
+let totalSlides = 0;
+
+async function fetchBillboards() {
+    try {
+        const res = await fetch(billboardAPI);
+        const data = await res.json();
+        const container = document.getElementById('billboard-container');
+        const wrapper = document.getElementById('slider-wrapper');
+        const dotsContainer = document.getElementById('slider-dots');
+
+        if (!container || !wrapper || !data || Object.keys(data).length === 0) {
+            if (container) container.style.display = 'none';
+            return;
+        }
+
+        const billboards = Object.keys(data).map(key => data[key]).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+        totalSlides = billboards.length;
+
+        let slidesHTML = "";
+        let dotsHTML = "";
+
+        billboards.forEach((bb, index) => {
+            const mediaSrc = bb.mediaUrl || bb.imageUrl;
+            const isVideo = bb.mediaType === 'video' || (mediaSrc && mediaSrc.includes('data:video'));
+            
+            slidesHTML += `
+                <div class="slide">
+                    ${isVideo ? `<video src="${mediaSrc}" autoplay muted loop playsinline></video>` : `<img src="${mediaSrc}" alt="Billboard">`}
+                </div>
+            `;
+            dotsHTML += `<div class="dot ${index === 0 ? 'active' : ''}" onclick="goToSlide(${index})"></div>`;
+        });
+
+        wrapper.innerHTML = slidesHTML;
+        if(dotsContainer) dotsContainer.innerHTML = dotsHTML;
+        container.style.display = 'block';
+
+        if (totalSlides > 1) {
+            startSlider();
+        }
+    } catch (e) { console.error("Slider Load Error:", e); }
+}
+
+function startSlider() {
+    clearInterval(slideInterval);
+    slideInterval = setInterval(() => {
+        currentSlide = (currentSlide + 1) % totalSlides;
+        updateSliderPosition();
+    }, 4000);
+}
+
+function goToSlide(index) {
+    currentSlide = index;
+    updateSliderPosition();
+    startSlider(); 
+}
+
+function updateSliderPosition() {
+    const wrapper = document.getElementById('slider-wrapper');
+    const dots = document.querySelectorAll('.dot');
+    if(wrapper) wrapper.style.transform = `translateX(-${currentSlide * 100}%)`;
+    dots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === currentSlide);
+    });
+}
+/* ------------------------------------- */
 
 function saveCartToStorage() { localStorage.setItem('bustan_cart', JSON.stringify(cart)); }
 
@@ -130,11 +202,11 @@ function renderDynamicCategoryTabs() {
     const swipeContainer = document.getElementById('swipeCategoryBar');
     if (!swipeContainer) return;
 
-    let html = `<a href="#" class="cat-icon-item active" onclick="switchCategory('All', this)"><i class="fas fa-layer-group"></i><span>সব দেখুন</span></a>`;
+    let html = `<a href="javascript:void(0)" class="cat-icon-item active" onclick="switchCategory('All', this)"><i class="fas fa-layer-group"></i><span>সব দেখুন</span></a>`;
 
     activeCategories.forEach(category => {
         const safeCat = category.replace(/'/g, "\\'");
-        html += `<a href="#" class="cat-icon-item" onclick="switchCategory('${safeCat}', this)"><i class="${getCategoryIcon(category)}"></i><span>${category}</span></a>`;
+        html += `<a href="javascript:void(0)" class="cat-icon-item" onclick="switchCategory('${safeCat}', this)"><i class="${getCategoryIcon(category)}"></i><span>${category}</span></a>`;
     });
     swipeContainer.innerHTML = html;
 }
@@ -155,6 +227,13 @@ async function fetchProducts() {
 
         renderDynamicCategoryTabs();
         renderCategoryWiseColumns(); 
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const catFromUrl = urlParams.get('cat');
+        if(catFromUrl) {
+            setTimeout(() => switchCategory(catFromUrl, null, false), 100);
+        }
+
     } catch (err) { console.error(err); }
 }
 
@@ -210,23 +289,59 @@ function searchProducts(query) {
     });
 }
 
-function switchCategory(cat, element) {
+function switchCategory(cat, element = null, saveHistory = true) {
+    if (!element) {
+        document.querySelectorAll('.cat-icon-item').forEach(el => {
+            let spanText = el.querySelector('span').innerText.trim().toLowerCase();
+            if (spanText === cat.toLowerCase() || (cat === 'All' && spanText === 'সব দেখুন')) {
+                element = el;
+            }
+        });
+    }
+
     document.querySelectorAll('.cat-icon-item').forEach(el => el.classList.remove('active'));
-    element.classList.add('active');
-    if (cat === 'All') { visibleCategoryCount = 7; renderCategoryWiseColumns(); return; }
-    visibleCategoryCount = activeCategories.length; renderCategoryWiseColumns();
+    if(element) element.classList.add('active');
+
+    if (saveHistory) {
+        let urlParams = new URLSearchParams(window.location.search);
+        if (cat === 'All') {
+            urlParams.delete('cat');
+        } else {
+            urlParams.set('cat', cat);
+        }
+        let newUrl = window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : '');
+        window.history.pushState({ category: cat }, '', newUrl);
+    }
+
+    if (cat === 'All') { 
+        visibleCategoryCount = 7; 
+        renderCategoryWiseColumns(); 
+        return; 
+    }
+    
+    visibleCategoryCount = activeCategories.length; 
+    renderCategoryWiseColumns();
+    
     document.querySelectorAll('.category-section').forEach(sec => {
         sec.style.display = sec.dataset.catName === cat.toLowerCase() ? 'block' : 'none';
     });
 }
 
-function viewFullCategory(cat) { switchCategory(cat, document.querySelector('.cat-icon-item')); document.getElementById(`grid-${cat.replace(/[^a-zA-Z0-9]/g, '-')}`).classList.add('full-view'); }
+window.addEventListener('popstate', function(event) {
+    if (event.state && event.state.category) {
+        switchCategory(event.state.category, null, false);
+    } else {
+        switchCategory('All', null, false);
+    }
+});
 
-/* 👇 নতুন যোগ করা ব্যাক ও নেক্সট পেজের ফাংশন */
-function goBackPage() {
-    window.history.back();
+function viewFullCategory(cat) { 
+    switchCategory(cat, null); 
+    setTimeout(() => {
+        let grid = document.getElementById(`grid-${cat.replace(/[^a-zA-Z0-9]/g, '-')}`);
+        if(grid) grid.classList.add('full-view');
+    }, 50);
 }
 
-function goForwardPage() {
-    window.history.forward();
-}
+function goBackPage() { window.history.back(); }
+function goForwardPage() { window.history.forward(); }
