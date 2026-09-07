@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Cart Sidebar Slide Fix */
         #cart-sidebar {
             position: fixed; top: 0; right: -360px; width: 320px; height: 100%;
             background: #fff; z-index: 3000; transition: 0.3s ease; padding: 20px;
@@ -19,22 +18,24 @@
 </head>
 <body>
 
-    <!-- 🔝 TOP INFO BAR -->
+    <!-- 🔝 TOP INFO BAR (DARK) -->
     <div class="top-info-bar">
-        <div class="top-left-info">
-            <i class="fas fa-leaf" style="color: #4ade80;"></i> Grow Green, Live Clean
+        <div class="top-social-links">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+            <span class="follow-text">Follow us</span>
         </div>
         <a href="tel:+8801922790663" class="top-phone-link">
             <i class="fas fa-phone-alt"></i> 01922-790663
         </a>
     </div>
 
-    <!-- 👑 MAIN APP HEADER (PREMIUM WHITE DESIGN) -->
+    <!-- 👑 MAIN APP HEADER (PREMIUM DARK DESIGN) -->
     <header class="premium-header">
         <div class="header-top-row">
             <!-- Reel Button -->
             <a href="reels.html" class="header-action-col">
-                <div class="reel-icon-circle">
+                <div class="reel-icon-circle-dark">
                     <i class="fas fa-play"></i>
                 </div>
                 <span>Reel</span>
@@ -44,7 +45,7 @@
             <div class="center-logo-box" onclick="window.location.reload();">
                 <img src="logo.jpg" class="header-main-logo" alt="Logo" onerror="this.src='logo.JPG'">
                 <div class="brand-text-block">
-                    <div class="center-brand-name">MAAN</div>
+                    <div class="center-brand-name">MAAN <i class="fas fa-leaf"></i></div>
                     <div class="center-brand-sub">Seeds & Plants</div>
                 </div>
             </div>
@@ -69,22 +70,23 @@
 
         <!-- 🔍 SEARCH BAR & ARROWS -->
         <div class="header-search-box-full">
-            <div style="display: flex; gap: 5px;">
+            <div style="display: flex; gap: 6px;">
                 <button class="nav-arrow-btn" onclick="goBackPage()" title="আগের পেজে যান">←</button>
                 <button class="nav-arrow-btn" onclick="goForwardPage()" title="পরের পেজে যান">→</button>
             </div>
             <div class="mobile-search-inner">
                 <i class="fas fa-search search-icon-left"></i>
                 <input type="text" id="main-search" placeholder="Search seeds, plants, pots, fertilizers..." oninput="searchProducts(this.value)">
-                <i class="fas fa-camera camera-icon-right"></i>
+                <!-- 🎤 Mic Icon replaced the camera icon -->
+                <i class="fas fa-microphone camera-icon-right"></i>
             </div>
         </div>
-
-        <!-- 📱 CATEGORY BAR (MOVED TO HEADER) -->
-        <div class="header-category-bar">
-            <div class="icon-category-swipe-wrapper" id="swipeCategoryBar"></div>
-        </div>
     </header>
+
+    <!-- 📱 CATEGORY BAR (Placed just below header) -->
+    <div class="header-category-bar">
+        <div class="icon-category-swipe-wrapper" id="swipeCategoryBar"></div>
+    </div>
 
     <!-- 🏬 OUR SHOPS SIDEBAR -->
     <div class="shops-sidebar" id="shops-sidebar">
